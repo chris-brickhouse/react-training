@@ -1,10 +1,10 @@
-
 import React from 'react';
 
 export default class WishList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isDataLoaded: false,
             wishList: []
         };
         this.childRef = React.createRef(null);
@@ -16,22 +16,24 @@ export default class WishList extends React.Component {
             .then(
                 (result) => {
                     this.setState({
-                        isLoaded: true,
+                        isDataLoaded: true,
                         wishList: result
                     });
                     //localStorage.setItem("wishList", JSON.stringify(this.state.wishList));
+                    console.log(this.state)
                 },
                 (error) => {
                     this.setState({
-                        isLoaded: true,
+                        isDataLoaded: false,
                         error
                     });
                 }
-            )
+        )
+        
     }
 
     handleCallback = (data) => {
-        this.setState({ wishList: data.wishList });
+        this.setState({ isDataLoaded: true, wishList: data.wishList });
     }
 
     addItem = () => {
@@ -48,7 +50,7 @@ export default class WishList extends React.Component {
             body: JSON.stringify(data)
         }).then(res => res.json()).then(res => {
             console.log("Request complete! response:", res);
-            this.setState({ wishList: res });
+            this.setState({ wishList: res, isDataLoaded: true });
         });
     };
 
@@ -58,14 +60,14 @@ export default class WishList extends React.Component {
             .then(
                 (result) => {
                     this.setState({
-                        isLoaded: true,
-                        wishList: result
+                        wishList: result,
+                        isDataLoaded: true
                     });
                     //localStorage.setItem("wishList", JSON.stringify(this.state.wishList));
                 },
                 (error) => {
                     this.setState({
-                        isLoaded: true,
+                        isDataLoaded: true,
                         error
                     });
                 }
@@ -87,7 +89,13 @@ export default class WishList extends React.Component {
                     </div>
                 </div>
                 <div className="scrolling-list">
-                    <WishListItems updateItem={this.updateItem} wishList={this.state.wishList} deleteItem={this.deleteItem}></WishListItems>
+                    
+                    {!this.state.isDataLoaded ? <div className="d-flex justify-content-center">
+                        <div className="spinner-border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    </div>: null}
+                    {this.state.isDataLoaded ? <WishListItems updateItem={this.updateItem} wishList={this.state.wishList} deleteItem={this.deleteItem}></WishListItems> : null }
                 </div>
             </div>
         )
