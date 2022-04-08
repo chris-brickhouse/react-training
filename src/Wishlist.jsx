@@ -11,7 +11,7 @@ export default class WishList extends React.Component {
     }
 
     componentDidMount() {
-        fetch("http://localhost:4000/api/wishlists")
+        fetch("https://gacapp.net/api/wishlists")
             .then(res => res.json())
             .then(
                 (result) => {
@@ -44,7 +44,7 @@ export default class WishList extends React.Component {
 
     updateItem = (data) => {
         console.log(data)
-        fetch('http://localhost:4000/api/wishlists/' + data.id, {
+        fetch('https://gacapp.net/api/wishlists/' + data.id, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -55,7 +55,7 @@ export default class WishList extends React.Component {
     };
 
     deleteItem = (data) => {
-        fetch('http://localhost:4000/api/wishlists/delete/' + data.id)
+        fetch('https://gacapp.net/api/wishlists/delete/' + data.id)
             .then(res => res.json())
             .then(
                 (result) => {
